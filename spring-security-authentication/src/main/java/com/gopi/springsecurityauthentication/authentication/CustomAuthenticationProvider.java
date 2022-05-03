@@ -1,7 +1,8 @@
-package com.gopi.springsecurityauthentication;
+package com.gopi.springsecurityauthentication.authentication;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
@@ -17,7 +18,8 @@ public class CustomAuthenticationProvider extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
 
-        auth.inMemoryAuthentication().withUser("gopi").password("gopi").roles("USER").and().withUser("ram").password("bheem").roles("MANAGER");
+        auth.inMemoryAuthentication().withUser("gopi").password("gopi").roles("USER").and()
+                .withUser("ram").password("ram").roles("ADMIN");
     }
 
     //This explains which encryption is used for password. Here I took no encoder i.e plain text is suffice but we should never do that.
@@ -25,5 +27,13 @@ public class CustomAuthenticationProvider extends WebSecurityConfigurerAdapter {
     public PasswordEncoder getPasswordEncoder()
     {
         return NoOpPasswordEncoder.getInstance();
+    }
+
+    public void configure(final HttpSecurity httpSecurity) throws Exception {
+        httpSecurity.authorizeRequests()
+                .antMatchers("/admin").hasAnyRole("ADMIN")//if it is ADMIN allow to access /admin
+                .antMatchers(("/user")).hasRole("USER","ADMIN")//if it is USER/ADMIN allow to access /user
+                .antMatchers("/").permitAll()
+                .and().formLogin();
     }
 }
