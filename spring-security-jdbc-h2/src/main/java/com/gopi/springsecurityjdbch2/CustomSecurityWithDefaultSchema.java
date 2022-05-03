@@ -19,15 +19,22 @@ public class CustomSecurityWithDefaultSchema extends WebSecurityConfigurerAdapte
 
     @Override
     protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication()
-                .dataSource(dataSource)
-                .withDefaultSchema()
-                .withUser(
-                        User.builder().username("gopi").password("gopi").roles("ADMIN")
-                )
-                .withUser(
-                        User.builder().username("ram").password("ram").roles("USER")
-                );
+
+        auth.jdbcAuthentication().dataSource(dataSource);
+
+        /**
+         *  Below code will create default tables and insert these values and also will validate against these table values.
+         *  This is used for testing purpose.  //https://docs.spring.io/spring-security/site/docs/4.2.x/reference/html/appendix-schema.html  these tables are not automatically added by spring.
+                auth.jdbcAuthentication()
+                        .dataSource(dataSource)
+                        .withDefaultSchema()
+                        .withUser(
+                                User.builder().username("gopi").password("gopi").roles("ADMIN")
+                        )
+                        .withUser(
+                                User.builder().username("ram").password("ram").roles("USER")
+                        );
+           */
     }
 
     @Override
