@@ -5,6 +5,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -32,7 +33,7 @@ public class CustomAuthenticationProvider extends WebSecurityConfigurerAdapter {
     public void configure(final HttpSecurity httpSecurity) throws Exception {
         httpSecurity.authorizeRequests()
                 .antMatchers("/admin").hasAnyRole("ADMIN")//if it is ADMIN allow to access /admin
-                .antMatchers(("/user")).hasRole("USER","ADMIN")//if it is USER/ADMIN allow to access /user
+                .antMatchers(("/user")).hasAnyRole("USER", "ADMIN")//if it is USER/ADMIN allow to access /user
                 .antMatchers("/").permitAll()
                 .and().formLogin();
     }
